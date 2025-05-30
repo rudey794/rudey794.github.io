@@ -1,1 +1,58 @@
-hello world!
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Countdown to PUB</title>
+  <style>
+	#countdown {
+	  font-size: 2em;
+	  font-family: Arial, sans-serif;
+	}
+  </style>
+</head>
+<body>
+  <div id="countdown">Loading countdown...</div>
+
+  <script>
+	function getNextFriday1230() {
+	  const now = new Date();
+	  const result = new Date(now);
+	  result.setHours(12, 30, 0, 0); // Set time to 12:30 PM
+
+	  // Get day of the week (0 = Sunday, 5 = Friday)
+	  const day = now.getDay();
+	  const daysUntilFriday = (5 - day) % 7 ; // Default to 7 if today is Friday and past 12:30
+	  result.setDate(now.getDate() + daysUntilFriday);
+
+	  // If it's Friday but already past 12:30 PM, schedule for next Friday
+	  if (day === 5 && now > result) {
+		result.setDate(result.getDate() + 7);
+	  }
+
+	  return result;
+	}
+
+	function updateCountdown() {
+	  const target = getNextFriday1230();
+	  const now = new Date();
+	  const diff = target - now;
+
+	  if (diff <= 0) {
+		document.getElementById('countdown').innerText = "It's Friday 12:30 PM!";
+		return;
+	  }
+
+	  const seconds = Math.floor(diff / 1000) % 60;
+	  const minutes = Math.floor(diff / 1000 / 60) % 60;
+	  const hours = Math.floor(diff / 1000 / 60 / 60) % 24;
+	  const days = Math.floor(diff / 1000 / 60 / 60 / 24);
+
+	  document.getElementById('countdown').innerText =
+		`${days}d ${hours}h ${minutes}m ${seconds}s until Friday 12:30 PM`;
+	}
+
+	// Update every second
+	setInterval(updateCountdown, 1000);
+	updateCountdown();
+  </script>
+</body>
+</html>
